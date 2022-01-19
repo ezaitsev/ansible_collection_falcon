@@ -5,7 +5,7 @@
     method: POST
     body: "client_id={{ falcon_client_id }}&client_secret={{ falcon_client_secret }}"
     return_content: true
-    status_code: 201
+    status_code: 201, 308
     headers:
       content-type: application/x-www-form-urlencoded
   register: falcon_api_oauth2_token
@@ -16,6 +16,17 @@
   when:
     - falcon_cloud_autodiscover
     - falcon_api_oauth2_token.x_cs_region|length > 0
+   
+- name: CrowdStrike Falcon | Authenticate to CrowdStrike API again
+  ansible.windows.win_uri:
+    url: "https://{{ falcon_cloud }}/oauth2/token"
+    method: POST
+    body: "client_id={{ falcon_client_id }}&client_secret={{ falcon_client_secret }}"
+    return_content: true
+    status_code: 201, 308
+    headers:
+      content-type: application/x-www-form-urlencoded
+  register: falcon_api_oauth2_token
 
 - name: CrowdStrike Falcon | Detect Target CID Based on Credentials
   ansible.windows.win_uri:
