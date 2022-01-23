@@ -59,6 +59,21 @@
     ansible.builtin.package_facts:
       manager: auto
     when: ansible_distribution != "MacOSX"
+    
+  - name: CrowdStrike Falcon | Associate Falcon Sensor with your Customer ID (CID)
+    command: "/opt/CrowdStrike/falconctl -s -f --cid={{ falcon_cid }}"
+    when:
+      - falcon_cid
+      - ansible_distribution != "MacOSX"
+      
+  - name: CrowdStrike Falcon Installer | Starting Falcon Sensor Daemon (Linux)
+    service:
+      name: falcon-sensor
+      state: started
+      enabled: yes
+    when:
+      - falcon_cid
+      - ansible_distribution != "MacOSX"
 
   - name: CrowdStrike Falcon | Gather tmp install directory objects
     ansible.builtin.find:
