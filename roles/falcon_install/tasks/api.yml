@@ -106,7 +106,7 @@
   register: falcon_sensor_download
   
 - name: CrowdStrike Falcon | Detect Target CID Based on Credentials
-  ansible.builtin.get_url:
+  ansible.builtin.uri:
     url: https://{{ falcon_cloud }}/sensors/queries/installers/ccid/v1
     method: GET
     return_content: true
